@@ -55,7 +55,7 @@
             if(empty($this->mysqli->error))
                 return "{$this->mysqli->insert_id}";
             else
-                return "error";
+                return $this->mysqli->error;
         }
 
         public function update($table_name, $columns, $values, $conditions){
@@ -65,7 +65,6 @@
                 $vals .= $values[$key].",";
             }
 
-            $cols = rtrim($cols, ",");
             $query = "UPDATE $table_name SET $vals";
             $query = rtrim($query, ",");
 
@@ -79,8 +78,11 @@
             $query .= ";";
 
             $this->mysqli->query($query);
-
-            return "{$this->mysqli->insert_id}";
+            
+            if(empty($this->mysqli->error))
+                return "{$this->mysqli->affected_rows}";
+            else
+                return $this->mysqli->error;
         }
 
         public function delete($table_name, $conditions){
@@ -98,7 +100,10 @@
 
             $this->mysqli->query($query);
 
-            return "{$this->mysqli->insert_id}";
+            if(empty($this->mysqli->error))
+                return "{$this->mysqli->insert_id}";
+            else
+                return $this->mysqli->error;
         }
     }
  ?>

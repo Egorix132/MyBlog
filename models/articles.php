@@ -1,9 +1,8 @@
 <?php
 	class Model_Articles{
 
-		function __construct(){
-
-		}
+		private static $min_lengths = ['name' => 1, 'annonce_text' => 1, 'description' => 1];
+		private static $max_lengths = ['name' => 50, 'annonce_text' => 200, 'description' => 10000];
 
 		function getAllArticles(){
 			$articles = Core::$db->select('articles');
@@ -13,58 +12,73 @@
 
 		function getArticle($id){
 			$article = Core::$db->select('articles', array("id = $id"));
-			$article[0]['images'] = Core::$db->select('description_images', array("article_id = {$article[0][id]}"));
+
+			if(empty($article))
+				return null;
+
+			$article[0]['images'] = Core::$db->select('description_images', array("article_id = {$article[0]['id']}"));
+
+			if(empty($article[0]['images'])) $article[0]['images'] = array();
 
 			return $article[0];
 		}
 
-		function addArticle($name, $annonce_text, $description, $annonce_image, $images, $user_id){
+		function addArticle($name, $annonce_text, $description, $user_id){
 			$name = Model_Articles::clean($name);
 			$annonce_text = Model_Articles::clean($annonce_text);
 			$description = Model_Articles::clean($description);
-			
-			if(!empty($name) && !empty($annonce_text) && !empty($description)) {
-				if(Model_Articles::checkLength($name, 1, 50) && Model_Articles::checkLength($annonce_text, 1, 200) && Model_Articles::checkLength($description, 1, 2000)) {
-					$id = Core::$db->insert('articles', array('name', 'annonce', 'description', 'annonce_image', 'user_id', 'created'), array("'$name'", "'$annonce_text'", "'$description'", "'$annonce_image'", "'$user_id'", "now()"));
 
-					foreach ($images as $image) {
-						Core::$db->insert('description_images', array('article_id', 'img_path'), array("'$id'", "'$image'"));
-					}
-				}
-				else {
-					return "Введенные данные некорректны";
+			$fields = ['name', 'annonce_text', 'description'];
+			$result = ['status' => true];
+
+			foreach($fields as $field){
+				if(!Model_Articles::checkLength($$field, Model_Articles::$min_lengths[$field], Model_Articles::$max_lengths[$field])){
+					$result['status'] = false;
+					$result[$field] = 'incorrect length';
 				}
 			}
-			else {
-				return "Заполните пустые поля";
+
+			if($result['status']) {
+				$result['id'] = Core::$db->insert('articles',
+				 	array('name', 'annonce', 'description', 'user_id', 'created'),
+					array("'$name'", "'$annonce_text'", "'$description'", "'$user_id'", "now()"));
+
+				if(!is_numeric($result['id']))
+					$result['name'] = 'Статья с таким именем уже существует';
 			}
-			return $id;
+
+			return $result;
 		}
 
-		function updateArticle($name, $annonce_text, $description, $annonce_image, $images, $id){
+		function updateArticle($name, $annonce_text, $description, $id){
 			$name = Model_Articles::clean($name);
 			$annonce_text = Model_Articles::clean($annonce_text);
 			$description = Model_Articles::clean($description);
 			$id = Model_Articles::clean($id);
 
-			if(!empty($name) && !empty($annonce_text) && !empty($description)) {
-				if(Model_Articles::checkLength($name, 1, 50) && Model_Articles::checkLength($annonce_text, 1, 200) && Model_Articles::checkLength($description, 1, 2000)) {
-					Core::$db->update('articles', array('name', 'annonce', 'description', 'annonce_image'), array("'$name'", "'$annonce_text'", "'$description'", "'$annonce_image'"), array("id = $id"));
+			$fields = ['name', 'annonce_text', 'description'];
+			$result = ['status' => true];
 
-					Core::$db->delete('description_images', array("article_id = $id"));
-
-					foreach ($images as $image) {
-						Core::$db->insert('description_images', array('article_id', 'img_path'), array("'$id'", "'$image'"));
-					}
-				}
-				else {
-					return "Введенные данные некорректны";
+			foreach($fields as $field){
+				if(!Model_Articles::checkLength($$field, Model_Articles::$min_lengths[$field], Model_Articles::$max_lengths[$field])){
+					$result['status'] = false;
+					$result[$field] = 'incorrect length';
 				}
 			}
-			else {
-				return "Заполните пустые поля";
+
+			if($result['status']) {
+				$result['id'] = Core::$db->update('articles',
+					array('name', 'annonce', 'description'),
+					array("'$name'", "'$annonce_text'", "'$description'"),
+					array("id = $id"));
+					
+				Core::$db->delete('description_images', array("article_id = $id"));
+
+				if(!is_numeric($result['id']))
+					$result['name'] = 'Ошибка';
 			}
-			return $id;
+
+			return $result;
 		}
 
 		function deleteArticle($id){

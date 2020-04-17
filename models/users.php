@@ -24,7 +24,7 @@
 				$result['password'] = 'incorrect length';
 			}
 
-			if($result == 'ok'){
+			if($result['status'] == 'ok'){
 				$solt = uniqid();
 				$password .= $solt;
 				$password = crypt($password);
@@ -62,7 +62,7 @@
 				$result['status'] = 'not ok';
 				$result['login'] = 'User with this name does not exist';
 			}
-
+			
 			return $result;
         }
 

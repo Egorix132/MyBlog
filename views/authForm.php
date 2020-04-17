@@ -24,7 +24,7 @@
 
     <div class="auth-window">
       <div class="widget-header">
-        <h4>Login</h4>
+        <h4><?= $array['method'] == 'login' ? 'Login' : 'Registeration' ?></h4>
       </div>
       <form action="./index.php" method="post">
           <div class="widget-content">

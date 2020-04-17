@@ -8,11 +8,24 @@
 		function handleImage($img_name, $tmp_name, $uploads_dir, $max_width, $max_height){
 			$img_name = basename($img_name);
 			$img_name = substr_replace($img_name, uniqid(), strpos($img_name, "."), 0);
-			$img_name = "$uploads_dir/$img_name";
+			$img_name = $uploads_dir."/$img_name";
 
-			move_uploaded_file($tmp_name, Core::$root.$img_name);
-			$this->resizeImage(Core::$root.$img_name, Core::$root.$img_name, $max_width, $max_height);
+			move_uploaded_file($tmp_name, Core::$root.'/'.$img_name);
+			$this->resizeImage(Core::$root.'/'.$img_name, Core::$root.'/'.$img_name, $max_width, $max_height);
 			return $img_name;
+		}
+
+		function updateAnnonceImage($image_path, $id){
+			Core::$db->update('articles',
+				array('annonce_image'),
+				array("'$image_path'"),
+				array("id = $id"));
+		}
+
+		function addDescriptionImages($images, $id){
+			foreach ($images as $image_path) {
+				Core::$db->insert('description_images', array('article_id', 'img_path'), array("'$id'", "'$image_path'"));
+			}
 		}
 
 		function resizeImage($source, $destination, $max_width, $max_height){

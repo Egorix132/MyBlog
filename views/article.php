@@ -57,11 +57,10 @@
                           </div>
 
                           <?php
-                            global $user;
-                            if($user->status > 0 && $user->id == $array['article']['id']){ ?>
+                            if(Core::$user->status > 0 && Core::$user->id == $array['article']['user_id']){ ?>
                                 <div class="col-lg-12">
-                                    <a class="article-change" href="/articles/delete_article/<?= $array['article']['id'] ?>">Delete</a>
-                                    <a class="article-change" href="/articles/update_article/<?= $array['article']['id']  ?>">Update</a>
+                                    <a class="article-change" href="articles/delete_article/<?= $array['article']['id'] ?>">Delete</a>
+                                    <a class="article-change" href="articles/update_article/<?= $array['article']['id']  ?>">Update</a>
                                 </div>
                           <?php } ?>
 
@@ -71,8 +70,8 @@
 			   </div>
             <div class="col-lg-12">
                  <ul class="post-nav">
-                   <li><a href="/articles/view_article/<?= $array['article']['id'] - 1 ?>">Prev Post</a></li>
-                   <li><a href="/articles/view_article/<?= $array['article']['id'] + 1 ?>">Next Post</a></li>
+                   <li><a href="articles/view_article/<?= $array['article']['id'] - 1 ?>">Prev Post</a></li>
+                   <li><a href="articles/view_article/<?= $array['article']['id'] + 1 ?>">Next Post</a></li>
                  </ul>
             </div>
 
@@ -85,7 +84,7 @@
                   <ul class="comments">
                     <li>
                       <div class="comment-author-image">
-                        <img src="images/comment-author-01.jpg" alt="">
+                        <img src="assets/images/comment-author-01.jpg" alt="">
                       </div>
                       <div class="right-content">
                         <h6>Robert Imeri <span>January 10, 2020</span></h6>
@@ -95,7 +94,7 @@
                     </li>
                     <li class="replied">
                       <div class="comment-author-image">
-                        <img src="images/comment-author-03.jpg" alt="">
+                        <img src="assets/images/comment-author-03.jpg" alt="">
                       </div>
                       <div class="right-content">
                         <h6>Kate Luise <span>January 11, 2020</span></h6>
@@ -105,7 +104,7 @@
                     </li>
                     <li>
                       <div class="comment-author-image">
-                        <img src="images/comment-author-02.jpg" alt="">
+                        <img src="assets/images/comment-author-02.jpg" alt="">
                       </div>
                       <div class="right-content">
                         <h6>Antonio Matters <span>January 09, 2020</span></h6>

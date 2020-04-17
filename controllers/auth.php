@@ -9,7 +9,7 @@
 				$model = Models::load('users');
 				$result = $model->login(Core::$query->post('login'), Core::$query->post('password'));
 
-				if($result == 'ok')
+				if($result['status'] == 'ok')
 					header("Location:".'/blog');
 				else
 					Views::show('authForm', array('method' => 'login', 'result' => $result, 'values' => array('login' => Core::$query->post('login'), 'password' => Core::$query->post('password'))));

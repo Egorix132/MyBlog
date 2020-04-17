@@ -21,17 +21,26 @@
 						<div class="down-content">
 
 						  <label>Article Name:</label>
+                          <?php if(isset($array['result']['name'])){ ?>
+                              <label><br><span class="error-text"><?= $array['result']['name']?></span></label>
+                          <?php }?>
 						  <p>
     					  	<h4><input type="text" class="form-control" placeholder="Enter name" name="name" value="<?= $array['article']['name'] ?>"></h4>
 						  </p>
 
 						  <label>Article Annonce:</label>
+                          <?php if(isset($array['result']['annonce_text'])){ ?>
+                              <label><br><span class="error-text"><?= $array['result']['annonce_text']?></span></label>
+                          <?php }?>
 						  <p>
 							  <input type="text" class="form-control" placeholder="Enter annonce text" name="annonce_text" value="<?= $array['article']['annonce'] ?>">
                               <br><br>
 						  </p>
 
 						  <label>Article Description:</label>
+                          <?php if(isset($array['result']['description'])){ ?>
+                              <label><br><span class="error-text"><?= $array['result']['description']?></span></label>
+                          <?php }?>
                           <p>
 							  <textarea class="form-control" rows="5" name="description"><?= $array['article']['description'] ?></textarea>
                               <br><br>
@@ -51,8 +60,6 @@
     					</div>
 					</form>
 
-
-
 				</div>
 			   </div>
 
@@ -63,7 +70,3 @@
 	</div>
   </div>
 </section>
-
-<?php if(isset($array['message'])){ ?>
-    <script>alert("<?= $array['message']?>")</script>
-<?php }?>
