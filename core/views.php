@@ -1,6 +1,6 @@
 <?php
 	class Views{
-		static function show($name, $array){
+		static function show($name, $array = array()){
 			global $root;
 			$name = trim($name);
 			$name = stripslashes($name);

@@ -12,17 +12,39 @@
             }
 		}
 
-        public function select($table_name, $conditions = null){
-            $query = "SELECT * FROM $table_name";
+        public function count($table_name, $conditions = null){
+            $query = "SELECT COUNT(*) FROM $table_name";
 
             if(!empty($conditions)){
 
-                $query .=  " WHERE ";
+                $query .=  ' WHERE ';
                 foreach ($conditions as $condition) {
                     $query .= $condition.",";
                 }
                 $query = rtrim($query, ",");
             }
+            $query .= ";";
+
+            $res = $this->mysqli->query($query);
+            $count = $res->fetch_assoc();
+
+            return $count['COUNT(*)'];
+        }
+        public function select($table_name, $conditions = null, $limit = null){
+            $query = "SELECT * FROM $table_name";
+
+            if(!empty($conditions)){
+
+                $query .=  ' WHERE ';
+                foreach ($conditions as $condition) {
+                    $query .= $condition.",";
+                }
+                $query = rtrim($query, ",");
+            }
+
+            if(!empty($limit))
+                $query .=  ' LIMIT '.$limit;
+
             $query .= ";";
 
             $res = $this->mysqli->query($query);
@@ -78,7 +100,7 @@
             $query .= ";";
 
             $this->mysqli->query($query);
-            
+
             if(empty($this->mysqli->error))
                 return "{$this->mysqli->affected_rows}";
             else

@@ -52,7 +52,7 @@
     					  </p>
 
 						  <input type="hidden" class="form-control-file border" name="c" value="articles">
-						  <input type="hidden" class="form-control-file border" name="m" value="<?= $array['method'] ?>">
+						  <input type="hidden" class="form-control-file border" name="method" value="<?= $array['method'] ?>">
 						  <input type="hidden" class="form-control-file border" name="id" value="<?= $array['article']['id'] ?>">
 
 						  <button type="submit" class="btn btn-primary">Submit</button>

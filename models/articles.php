@@ -4,10 +4,10 @@
 		private static $min_lengths = ['name' => 1, 'annonce_text' => 1, 'description' => 1];
 		private static $max_lengths = ['name' => 50, 'annonce_text' => 200, 'description' => 10000];
 
-		function getAllArticles(){
-			$articles = Core::$db->select('articles');
-
-			return $articles;
+		function getArticles($limit = null){
+			$articles = Core::$db->select('articles', null, $limit);
+			$count = Core::$db->count('articles');
+			return ['articles' => $articles, 'count' => $count];
 		}
 
 		function getArticle($id){
@@ -71,7 +71,7 @@
 					array('name', 'annonce', 'description'),
 					array("'$name'", "'$annonce_text'", "'$description'"),
 					array("id = $id"));
-					
+
 				Core::$db->delete('description_images', array("article_id = $id"));
 
 				if(!is_numeric($result['id']))

@@ -2,34 +2,38 @@
 	class Controller_auth
 	{
 		function login(){
-            if(Core::$query->getMethod() == 'GET'){
-    			Views::show('authForm', array('method' => 'login'));
-            }
-            else{
+			$result = null;
+            if(Core::$query->getInput('method') == 'login'){
 				$model = Models::load('users');
-				$result = $model->login(Core::$query->post('login'), Core::$query->post('password'));
+				$result = $model->login(Core::$query->getInput('login'), Core::$query->getInput('password'));
 
-				if($result['status'] == 'ok')
+				if($result['status'] == 'ok'){
 					header("Location:".'/blog');
-				else
-					Views::show('authForm', array('method' => 'login', 'result' => $result, 'values' => array('login' => Core::$query->post('login'), 'password' => Core::$query->post('password'))));
-            }
+					exit();
+				}
+			}
+			Views::show('authForm', array(
+				'method' => 'login',
+				'result' => $result,
+				'values' => array('login' => Core::$query->getInput('login'), 'password' => Core::$query->getInput('password'))));
 		}
 
         function register(){
-            if(Core::$query->getMethod() == 'GET'){
-    			Views::show('authForm', array('method' => 'register'));
-            }
-            else{
+			$result = null;
+            if(Core::$query->getInput('method') == 'register'){
 				$model = Models::load('users');
 
-				$result = $model->register(Core::$query->post('login'), Core::$query->post('password'), Core::$query->post('confirm_password'));
+				$result = $model->register(Core::$query->getInput('login'), Core::$query->post('password'), Core::$query->getInput('confirm_password'));
 
-				if($result['status'] == 'ok')
-					header("Location: ".'/blog');
-				else
-					Views::show('authForm', array('method' => 'register', 'result' => $result, 'values' => array('login' => Core::$query->post('login'), 'password' => Core::$query->post('password'))));
+				if($result['status'] == 'ok'){
+					header("Location:".'/blog');
+					exit();
+				}
             }
+			Views::show('authForm', array(
+				'method' => 'register',
+				'result' => $result,
+				'values' => array('login' => Core::$query->getInput('login'), 'password' => Core::$query->getInput('password'))));
         }
 	}
 ?>
